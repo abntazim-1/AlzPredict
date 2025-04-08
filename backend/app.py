@@ -19,7 +19,15 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='static')
-CORS(app, resources={r"/*": {"origins": "*"}})  # Allow all frontend requests
+# Update CORS to allow specific origins
+CORS(app, resources={r"/*": {
+    "origins": [
+        "http://localhost:3000",  # For local development
+        "https://your-vercel-app.vercel.app"  # Replace with your actual Vercel domain
+    ],
+    "methods": ["GET", "POST", "OPTIONS"],
+    "allow_headers": ["Content-Type"]
+}})
 
 # Create directory for processed images
 PROCESSED_IMAGES_DIR = 'static/processed_images'
@@ -121,9 +129,10 @@ def classify_image(image, request_host):
             confidence_score = float(np.max(result) * 100)  # Convert to percentage
             stage = ALZHEIMERS_STAGE_NAMES[predicted_class]
 
-        # Create URL for the processed image
+        # Create URL for the processed image using environment variable or request host
         if processed_image_filename:
-            processed_image_url = f"http://{request_host}/static/processed_images/{processed_image_filename}"
+            base_url = os.environ.get('API_BASE_URL', f"http://{request_host}")
+            processed_image_url = f"{base_url}/static/processed_images/{processed_image_filename}"
         else:
             processed_image_url = None
             
@@ -191,6 +200,10 @@ def serve_processed_image(filename):
 
 # Run Flask API
 if __name__ == "__main__":
-    print(f"Starting Flask server on http://localhost:5000")
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    
+    print(f"Starting Flask server on port {port}")
+    print(f"Debug mode: {debug}")
     print(f"Static files will be served from {os.path.abspath(PROCESSED_IMAGES_DIR)}")
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=debug, host="0.0.0.0", port=port)

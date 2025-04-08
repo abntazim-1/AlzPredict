@@ -6,4 +6,10 @@ services:
     startCommand: gunicorn app:app
     envVars:
       - key: PYTHON_VERSION
-        value: 3.9.0 
+        value: 3.9.0
+      - key: FLASK_DEBUG
+        value: False
+      - key: PORT
+        value: 10000
+      - key: API_BASE_URL
+        value: https://your-render-app.onrender.com  # Replace with your actual Render URL 
