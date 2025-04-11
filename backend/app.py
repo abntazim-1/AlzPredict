@@ -23,7 +23,7 @@ app = Flask(__name__, static_folder='static')
 CORS(app, resources={r"/*": {
     "origins": [
         "http://localhost:3000",  # For local development
-        "https://your-vercel-app.vercel.app"  # Replace with your actual Vercel domain
+        "https://alz-predict.vercel.app/"  # Replace with your actual Vercel domain https://alz-predict.vercel.app/
     ],
     "methods": ["GET", "POST", "OPTIONS"],
     "allow_headers": ["Content-Type"]
