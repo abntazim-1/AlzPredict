@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Alzheimer's Prediction System
 
 A web application for predicting Alzheimer's disease stages from MRI images.
